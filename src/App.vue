@@ -14,6 +14,15 @@
             <option value="relevance">relevance</option>
           </select>
         </div>
+        <div>
+            <label for="filter">Filters</label>&nbsp;
+            <select name="filter" v-model="filterBy" @change="filter">
+              <option value="free-ebooks">free-ebooks</option>
+              <option value="paid-ebooks">paid-ebooks</option>
+            </select>
+          </div>
+        <!-- <form @submit.prevent="filter">
+        </form> -->
       </form>
     </div>
     <div class="content">
@@ -33,8 +42,9 @@ export default {
       books: [],
       keyword: '',
       orderBy: 'newest',
-      maxResults: '10',
-      loadState: ''
+      maxResults: '20',
+      loadState: '',
+      filterBy: ''
     }
   },
   methods: {
@@ -51,7 +61,22 @@ export default {
           this.books = response.data.items
           this.loadState = 'success'
         })
-    }
+    },
+    filter() {
+      this.filterBy = 'free-ebooks'
+      this.loadState = 'loading'
+      axios
+        .get(
+          `https://www.googleapis.com/books/v1/volumes?q=intitle:${this.keyword}&filter=free-ebooks
+          &orderBy=${this.orderBy}&maxResults=${this.maxResults}`
+        )
+        .then(response => {
+          console.log(response.data.items)
+          this.books = response.data.items
+          this.loadState = 'success'
+        })
+    },
+
   },
   components: {
     BookList
