@@ -91,7 +91,7 @@ export default {
           this.books = response.data.items
           this.loadState = 'success'
         })
-    }
+    },
   },
   components: {
     BookList
@@ -152,6 +152,16 @@ a {
   box-shadow: 0 0 0 transparent;
   height: 40px;
   vertical-align: top;
+}
+.listButton{
+  border: 0;
+  padding: 0 10px;
+  margin: 0;
+  background: #26453d;
+  color: white;
+  box-shadow: 0 0 0 transparent;
+  height: 30px;
+  vertical-align: center;
 }
 select {
   display: inline-block;
