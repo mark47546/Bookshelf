@@ -17,12 +17,13 @@
         <div>
             <label for="filter">Filters</label>&nbsp;
             <select name="filter" v-model="filterBy" @change="filter">
-              <option value="free-ebooks">free-ebooks</option>
-              <option value="paid-ebooks">paid-ebooks</option>
+              <option value="partial">partial</option>
+              <option value="full">full</option>
+              <option value="free-ebooks">free-ebook</option>
+              <option value="paid-ebooks">paid-ebook</option>
+              <option value="ebooks">ebook</option>
             </select>
           </div>
-        <!-- <form @submit.prevent="filter">
-        </form> -->
       </form>
     </div>
     <div class="content">
@@ -35,7 +36,6 @@
 <script>
 import BookList from '@/components/BookList'
 import axios from 'axios'
-
 export default {
   data() {
     return {
@@ -63,20 +63,18 @@ export default {
         })
     },
     filter() {
-      this.filterBy = 'free-ebooks'
+      // this.filterBy = 'free-ebooks'
       this.loadState = 'loading'
       axios
         .get(
-          `https://www.googleapis.com/books/v1/volumes?q=intitle:${this.keyword}&filter=free-ebooks
-          &orderBy=${this.orderBy}&maxResults=${this.maxResults}`
+          `https://www.googleapis.com/books/v1/volumes?q=intitle:${this.keyword}&filter=${this.filterBy}&orderBy=${this.orderBy}&maxResults=${this.maxResults}`
         )
         .then(response => {
-          console.log(response.data.items)
+          console.log('response::', response.data.items)
           this.books = response.data.items
           this.loadState = 'success'
         })
     },
-
   },
   components: {
     BookList
@@ -86,80 +84,66 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
-
 body,
 html {
   position: relative;
-  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+  font-family: 'Merriweather', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #26453d;
 }
-
 a {
-  color: #2c3e50;
+  color: #26453d;
   text-decoration: none;
 }
-
 .content {
   position: relative;
 }
 
-/* Loader: shamelessly taken from https://codepen.io/veganben/pen/GAgsH */
 .loading {
   height: 0;
   width: 0;
   padding: 15px;
   border: 6px solid #ccc;
-  border-right-color: #2c3e50;
+  border-right-color: #26453d;
   border-radius: 22px;
   -webkit-animation: rotate 1s infinite linear;
   position: absolute;
   left: 50%;
   top: 0;
 }
-
 @-webkit-keyframes rotate {
-  /* 100% keyframe for  clockwise. 
-     use 0% instead for anticlockwise */
   100% {
     -webkit-transform: rotate(360deg);
   }
 }
-
 .input {
   border: 1px solid #eee;
-
   height: 40px;
   padding: 0;
   margin: 0;
   padding-left: 15px;
-
   font-size: 18px;
 }
-
 .button {
   border: 0;
   padding: 0 10px;
   margin: 0;
-  background: #2c3e50;
+  background: #26453d;
   color: white;
   box-shadow: 0 0 0 transparent;
-
   height: 40px;
   vertical-align: top;
 }
-
 select {
   display: inline-block;
   font-size: 16px;
   font-family: sans-serif;
   font-weight: 700;
-  color: #2c3e50;
+  color: #26453d;
   line-height: 1.3;
   padding: 0.6em 1.4em 0.5em 0.8em;
-  /* width: 100%; */
   max-width: 100%;
   box-sizing: border-box;
   margin: 0;
@@ -193,15 +177,12 @@ select:focus {
 select option {
   font-weight: normal;
 }
-
 .query {
   margin-bottom: 30px;
 }
-
 .book-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   grid-gap: 1rem;
 }
 </style>
-
