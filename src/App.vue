@@ -13,17 +13,21 @@
             <option value="newest">newest</option>
             <option value="relevance">relevance</option>
           </select>
+          <label for="filter" style="margin-left:2.5em">Filters</label>&nbsp;
+          <select name="filter" v-model="filterBy" @change="filter">
+            <option value="partial">partial</option>
+            <option value="full">full</option>
+            <option value="free-ebooks">free-ebook</option>
+            <option value="paid-ebooks">paid-ebook</option>
+            <option value="ebooks">ebook</option>
+          </select>
+          <label for="printType" style="margin-left:2.5em">Print Type</label>&nbsp;
+          <select name="printType" v-model="printBy" @change="printType">
+            <option value="all">all</option>
+            <option value="books">books</option>
+            <option value="magazines">magazines</option>
+          </select>
         </div>
-        <div>
-            <label for="filter">Filters</label>&nbsp;
-            <select name="filter" v-model="filterBy" @change="filter">
-              <option value="partial">partial</option>
-              <option value="full">full</option>
-              <option value="free-ebooks">free-ebook</option>
-              <option value="paid-ebooks">paid-ebook</option>
-              <option value="ebooks">ebook</option>
-            </select>
-          </div>
       </form>
     </div>
     <div class="content">
@@ -44,7 +48,8 @@ export default {
       orderBy: 'newest',
       maxResults: '20',
       loadState: '',
-      filterBy: ''
+      filterBy: '',
+      printBy: '',
     }
   },
   methods: {
@@ -75,6 +80,18 @@ export default {
           this.loadState = 'success'
         })
     },
+    printType(){
+      this.loadState = 'loading'
+      axios
+        .get(
+          `https://www.googleapis.com/books/v1/volumes?q=intitle:${this.keyword}&printType=${this.printBy}&orderBy=${this.orderBy}&maxResults=${this.maxResults}`
+        )
+        .then(response => {
+          console.log('response::', response.data.items)
+          this.books = response.data.items
+          this.loadState = 'success'
+        })
+    }
   },
   components: {
     BookList
